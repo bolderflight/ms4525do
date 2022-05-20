@@ -1,92 +1,119 @@
-# ms4525do
+[![Pipeline](https://gitlab.com/bolderflight/software/ms4525d0/badges/main/pipeline.svg)](https://gitlab.com/bolderflight/software/ms4525d0/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Driver for MS4525DO pressure transducer
+![Bolder Flight Systems Logo](img/logo-words_75.png) &nbsp; &nbsp; ![Arduino Logo](img/arduino_logo_75.png)
 
-## Getting started
+# Ms4525do
+This library communicates with [MS4525DO](https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS4525DO%7FB2%7Fpdf%7FEnglish%7FENG_DS_MS4525DO_B2.pdf%7FCAT-BLPS0002) pressure transducers and is compatible with Arduino ARM and CMake build systems.
+   * [License](LICENSE.md)
+   * [Changelog](CHANGELOG.md)
+   * [Contributing guide](CONTRIBUTING.md)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+# Description
+The MS4525DO pressure transducers are fully signal conditioned, amplified, and temperature compensated over a temperature range of -10 to +85 C. Digital measurements are sampled with a 14 bit resolution. The MS4525DO sensors are available in a wide variety of pressure ranges and configurations.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+# Usage
+This library communicates with the AMS 5915 sensors using an I2C interface. Pressure and temperature data can be provided at rates of up to 2 kHz.
 
-## Add your files
+# Installation
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Arduino
+
+Simply clone or download and extract the zipped library into your Arduino/libraries folder. In addition, the [Bolder Flight Systems Units library](https://github.com/bolderflight/units) must be installed. The library is added as:
+
+```C++
+#include "ms4525do.h"
+```
+
+An example Arduino executable is located in: *examples/arduino/ms4525do_example/ms4525do_example.ino*. Teensy 3.x, 4.x, and LC devices are used for testing under Arduino and this library should be compatible with other Arduino ARM devices. This library is **not** expected to work with AVR devices.
+
+## CMake
+CMake is used to build this library, which is exported as a library target called *ms4525do*. The header is added as:
+
+```C++
+#include "ms4525do.h"
+```
+
+The library can be also be compiled stand-alone using the CMake idiom of creating a *build* directory and then, from within that directory issuing:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/bolderflight/software/ms4525do.git
-git branch -M main
-git push -uf origin main
+cmake .. -DMCU=MK66FX1M0
+make
 ```
 
-## Integrate with your tools
+This will build the library and an example executable called *ms4525do_example*. The example executable source file is located at *examples/cmake/ms4525do_example.cc*. Notice that the *cmake* command includes a define specifying the microcontroller the code is being compiled for. This is required to correctly configure the code, CPU frequency, and compile/linker options. The available MCUs are:
+   * MK20DX128
+   * MK20DX256
+   * MK64FX512
+   * MK66FX1M0
+   * MKL26Z64
+   * IMXRT1062_T40
+   * IMXRT1062_T41
 
-- [ ] [Set up project integrations](https://gitlab.com/bolderflight/software/ms4525do/-/settings/integrations)
+These are known to work with the same packages used in Teensy products. Also switching packages is known to work well, as long as it's only a package change.
 
-## Collaborate with your team
+Each target also has a *_hex*, for creating the hex file to upload to the microcontroller, and an *_upload* for using the [Teensy CLI Uploader](https://www.pjrc.com/teensy/loader_cli.html) to flash the Teensy. Please note that the CMake build tooling is expected to be run under Linux or WSL, instructions for setting up your build environment can be found in our [build-tools repo](https://github.com/bolderflight/build-tools).
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+# Namespace
+This library is within the namespace *bfs*.
 
-## Test and Deploy
+# Ms4525do
 
-Use the built-in continuous integration in GitLab.
+**Ms4525do()** Default construction, requires calling the *Config* method to setup the I2C bus, I2C address, and pressure range.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Ms4525do(TwoWire &ast;bus, const uint8_t addr, const float p_max, const float p_min, const OutputType type = OUTPUT_TYPE_A)** Creates a Ms4525 object given a pointer to the I2C bus object, I2C address, maximum and minimum pressure range (PSI), and sensor output type. The available output types are:
 
-***
+| Enum | Description |
+| --- | --- |
+| OUTPUT_TYPE_A | Output type A |
+| OUTPUT_TYPE_B | Output type B |
 
-# Editing this README
+The output type is specified in the product number and defaults to OUTPUT_TYPE_A.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+For example, the following code declares an Ms4525 object called *pres* with an +/-1 PSI transducer located on I2C bus 0 with an I2C address of 0x28:
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```C++
+bfs::Ms4525do pres(&Wire, 0x28, 1.0f, -1.0f);
+```
 
-## Name
-Choose a self-explaining name for your project.
+**void Config(TwoWire &ast;bus, const uint8_t addr, const float p_max, const float p_min, const OutputType type = OUTPUT_TYPE_A)** This is required when using the default constructor and sets up the I2C bus, I2C address, pressure range, and output type.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+**bool Begin()** Initializes communication with the sensor. True is returned if communication is able to be established, otherwise false is returned. The communication bus is not initialized within this library and must be initialized seperately; this enhances compatibility with other sensors that may on the same bus.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```C++
+Wire.begin();
+Wire.setClock(400000);
+if (!pres.Begin()) {
+  // ERROR
+}
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+**bool Read()** Reads data from the sensor and stores the data in the Ms4525do object. Returns true if data is successfully read, otherwise, returns false.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```C++
+/* Read the sensor data */
+if (pres.Read()) {
+}
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+**float pres_pa()** Returns the pressure data from the object in units of Pa.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```C++
+float pressure = pres.pres_pa();
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+**float die_temp_c()** Returns the die temperature of the sensor from the object in units of degrees C.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```C++
+float temperature = pres.die_temp_c();
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**Status status()** Returns the latest status from the sensor. The status options are:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+| Enum | Description |
+| --- | --- |
+| STATUS_GOOD | Normal Operation. Good Data Packet |
+| STATUS_STALE_DATA | Stale Data. Data has been fetched since last measurement cycle. |
+| STATUS_FAULT | Fault Detected |
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+# Example List
+* **ms4525do_example**: demonstrates declaring an object, initializing the sensor, and collecting data. 

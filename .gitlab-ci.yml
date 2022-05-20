@@ -1,0 +1,11 @@
+stages:
+  - lint
+
+Lint:
+  stage: lint
+  tags:
+    - bfs
+  script: 
+    - cpplint --verbose=0 src/ms4525do.h
+    - cpplint --verbose=0 src/ms4525do.cpp
+  

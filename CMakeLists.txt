@@ -5,14 +5,14 @@ if (DEFINED MCU)
   FetchContent_Declare(
     mcu_support
     GIT_REPOSITORY https://github.com/bolderflight/mcu-support.git
-    GIT_TAG v1.0.0
+    GIT_TAG v1.1.0
   )
   FetchContent_MakeAvailable(mcu_support)
   # Setting up the toolchain
   set(CMAKE_TOOLCHAIN_FILE "${mcu_support_SOURCE_DIR}/cmake/cortex.cmake")
   # Project information
   project(Ms4525do
-    VERSION 1.0.0
+    VERSION 1.1.0
     DESCRIPTION "MS4525DO sensor driver"
     LANGUAGES CXX
   )
@@ -23,16 +23,9 @@ if (DEFINED MCU)
   FetchContent_Declare(
     core
     GIT_REPOSITORY https://github.com/bolderflight/core.git
-    GIT_TAG v3.0.2
+    GIT_TAG v3.1.0
   )
   FetchContent_MakeAvailable(core)
-  # Fetch units
-  FetchContent_Declare(
-    units
-    GIT_REPOSITORY https://github.com/bolderflight/units.git
-    GIT_TAG v4.1.1
-  )
-  FetchContent_MakeAvailable(units)
   # Add the library target
   add_library(ms4525do
     src/ms4525do.h
@@ -42,7 +35,6 @@ if (DEFINED MCU)
   target_link_libraries(ms4525do
     PUBLIC
       core
-      units
   )
   # Setup include directories 
   target_include_directories(ms4525do PUBLIC 

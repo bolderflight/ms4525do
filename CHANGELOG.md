@@ -1,4 +1,7 @@
 # Changelog
 
+## v1.1.0
+- Removed dependency on Units library
+
 ## v1.0.0
 - Initial commit

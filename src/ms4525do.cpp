@@ -30,7 +30,6 @@
 #else
 #include "core/core.h"
 #endif
-#include "units.h"  // NOLINT
 
 namespace bfs {
 
@@ -88,7 +87,7 @@ bool Ms4525do::Read() {
   temp_ = static_cast<float>(temp_cnts_) * (T_MAX_ - T_MIN_) / T_CNT_ + T_MIN_;
   if (temp_ > T_MAX_) {return false;}
   if (static_cast<Status>(status_) != STATUS_GOOD) {return false;}
-  pres_pa_ = convpres(pres_psi_, PresUnit::PSI, PresUnit::PA);
+  pres_pa_ = pres_psi_ * 0.45359237f * 9.80665f / 0.0254f / 0.0254f;
   temp_c_ = temp_;
   return true;
 }
